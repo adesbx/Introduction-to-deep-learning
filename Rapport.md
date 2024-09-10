@@ -1,5 +1,6 @@
 # Rapport
-
+Arthur DESBIAUX p2006393
+Valentin CUZIN RAMBAUD p2003442
 ## 10 septembre
 
 Partie 1:
