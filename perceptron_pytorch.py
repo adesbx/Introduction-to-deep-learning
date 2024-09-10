@@ -16,12 +16,9 @@ if __name__ == '__main__':
 	
 	# on lit les données
 	((data_train,label_train),(data_test,label_test)) = torch.load(gzip.open('mnist.pkl.gz'))
-
 	# on initialise le modèle et ses poids
 	w = torch.empty((data_train.shape[1],label_train.shape[1]),dtype=torch.float)
-	print("\n taille du tensor w ", w.size())
 	b = torch.empty((1,label_train.shape[1]),dtype=torch.float)
-	print("\n taille du tensor b ", w.size())
 	torch.nn.init.uniform_(w,-0.001,0.001)
 	torch.nn.init.uniform_(b,-0.001,0.001)
 
@@ -35,13 +32,10 @@ if __name__ == '__main__':
 		for i in range(0,nb_data_train,batch_size):
 			# on récupère les entrées
 			x = data_train[indices[i:i+batch_size]]
-			print(x.size())
 			# on calcule la sortie du modèle
 			y = torch.mm(x,w)+b
-			print(y.size())
 			# on regarde les vrais labels
 			t = label_train[indices[i:i+batch_size]]
-			print(t.size())
 			# on met à jour les poids
 			grad = (t-y)
 			w += eta * torch.mm(x.T,grad)
@@ -54,8 +48,7 @@ if __name__ == '__main__':
 			# on récupère l'entrée
 			x = data_test[i:i+1]
 			# on calcule la sortie du modèle
-			y = torch.mm(x,w)+b
-			# on regarde le vrai label
+			y = torch.mm(x,w)+b			# on regarde le vrai label
 			t = label_test[i:i+1]
 			# on regarde si la sortie est correcte
 			acc += torch.argmax(y,1) == torch.argmax(t,1)
