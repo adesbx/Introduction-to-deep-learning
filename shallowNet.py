@@ -68,10 +68,10 @@ for batch_size in range(5, 30, 5):
 						# record validation loss
 						if n == nb_epochs:
 							models.append([model, loss.item(), batch_size, hidden_num, eta, nb_epochs])
-							print('batch value: \n', bestModel[2])
-							print('nb_epoch value: \n', bestModel[3])
-							print('hidden_run: ', bestModel[4])
-							print('eta:', bestModel[5])
+							print('batch value: \n', batch_size)
+							print('nb_epoch value: \n', nb_epochs)
+							print('hidden_run: ', hidden_num)
+							print('eta:', eta)
 
 bestModel = min(models, key=lambda x: x[1])		
 model = bestModel[0]
