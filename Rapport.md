@@ -35,5 +35,15 @@ Partie 1:
         - t : [1, 10] => Pour l'image on regarde le label en 10 sorties.
 
         - acc : [1] => On compte le nombre de bonne réponse.
+## 12 septembre
+Partie 2 :
+    Détail méthodologie : On a écrit une classe ShallowNet étendu de nn.Module que l'on initialise avec une couche cachée contenant $N$ neurones, et une couche de sortie contenant 10 neurones de sorties (par rapport au label de sortie codé sur 10). Dans la méthodes forward, on implémente la logique du réseau, à savoir : couche caché => fonction d'activation relu => couche de sortie. le neurone fait une somme pondéré de ses entrées. Le poid de chaque entré est initialisé aléatoirement. On charge la données en découpant en 3 parties: train, validation puis test. On entraine le modèle de façon itérative sur un échantillon $X$ mini-batch de train.A la fin d'une epoch on **retient le dernier modèle** avec son erreur calculer sur le jeu de validation. Cela nous permet de retenir des modèles qui varient en fonction des hyper-paramètres suivant : taille du batch, nombre d'epoch, nombre de neurones pour la couche cachée, taux d'apprentissage.
+    Pour finir on retient le meilleur modèle pour l'envoyer au test, et mesurer le taux de réussite de sa prédiction.
 
+    
+Par la suite:
+1. Faut voir TensorBoard, afin de comprendre l'influance des divers hyper-paramètres.
+2. L'arrêt précoce pour enlever l'hyper-paramètre du nombre d'epoch.
+3. La bibliothèque ray Tune, pour cette argument suivant : " includes the latest hyperparameter search algorithms, integrates with TensorBoard and other analysis libraries, and natively supports distributed training".
+4. formater le code pour aller plus vite sur la partie 3 et 4.
 
