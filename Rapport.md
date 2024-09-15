@@ -37,14 +37,75 @@ Partie 1:
         - acc : [1] => On compte le nombre de bonne réponse.
 ## 12 septembre
 Partie 2 :
-    Détail méthodologie : On a écrit une classe ShallowNet étendu de nn.Module que l'on initialise avec une couche cachée contenant $N$ neurones, et une couche de sortie contenant 10 neurones de sorties (par rapport au label de sortie codé sur 10). Dans la méthodes forward, on implémente la logique du réseau, à savoir : couche caché => fonction d'activation relu => couche de sortie. le neurone fait une somme pondéré de ses entrées. Le poid de chaque entré est initialisé aléatoirement. On charge la données en découpant en 3 parties: train, validation puis test. On entraine le modèle de façon itérative sur un échantillon $X$ mini-batch de train.A la fin d'une epoch on **retient le dernier modèle** avec son erreur calculer sur le jeu de validation. Cela nous permet de retenir des modèles qui varient en fonction des hyper-paramètres suivant : taille du batch, nombre d'epoch, nombre de neurones pour la couche cachée, taux d'apprentissage.
-    Pour finir on retient le meilleur modèle pour l'envoyer au test, et mesurer le taux de réussite de sa prédiction.
+
+Détail méthodologie : On a écrit une classe ShallowNet étendu de nn.Module que l'on initialise avec une couche cachée contenant $N$ neurones, et une couche de sortie contenant 10 neurones de sorties (par rapport au label de sortie codé sur 10). 
+
+Dans la méthodes forward, on implémente la logique du réseau, à savoir : couche caché => fonction d'activation relu => couche de sortie. le neurone fait une somme pondéré de ses entrées. 
+
+Le poid de chaque entré est initialisé aléatoirement. On charge la données en découpant en 3 parties: train, validation puis test. Le jeu de données validation a été construit à partir de celui de train (on split le jeu en 2, 80% pour train et 20% pour validation).
+
+On entraine le modèle de façon itérative sur un échantillon $X$ mini-batch de train, $K$ couches cachées, un learning rate $L$ et $Y$ epochs. A la fin d'une epoch on **retient le dernier modèle** avec son erreur calculer sur le jeu de validation. Cela nous permet de retenir des modèles qui varient en fonction des hyper-paramètres suivant : taille du batch, nombre d'epoch, nombre de neurones pour la couche cachée, taux d'apprentissage.
+
+Pour finir on retient le meilleur modèle pour l'envoyer au test, et mesurer le taux de réussite de sa prédiction.
+
+
+Pour l'hyper paramètrage nous avons mit : 
+```
+batch_size [3, 5, 10]
+hidden_num [150, 200, 250, 300]
+eta [0.00001, 0.0001, 0.001, 0.01]
+nb_epochs [5, 10, 20]
+```
+Nos meilleurs paramètres sont :
+batch size = 3, nombre de neurones pour la couche cachée = 300, taux d'apprentissage = 0.01 et nombre d'epoch = 20
+Pour un score de **0.9807**
 
 Meilleur paramètre pour le moment : 
 Batch Size,Hidden Num,Learning Rate,Epochs
 3, 300, 0.01, 20
 avec un score de 0.9807
-    
+
+Une trace des tests effectués avec chaque paramètre est disponible dans **data.csv**
+
+On peut remarquer l'importance du learning rate notamment : 
+```
+Validation Loss,Batch Size,Hidden Num,Learning Rate,Epochs
+0.09179344028234482,3,150,1e-05,5
+0.0533987320959568,3,150,0.0001,5
+0.025701027363538742,3,150,0.001,5
+0.012341232970356941,3,150,0.01,5
+```
+Sur ces 3 exemples on peut voir la validation loss descendre énormement a chaque fois. L'augmenter va permettre donc de converger mais cependant il ne faut pas le mettre trop haut sinon l'effet sera inverse.
+
+Egalement le nombre de couche cachés est tout aussi important :
+```
+Validation Loss,Batch Size,Hidden Num,Learning Rate,Epochs
+0.012341232970356941,3,150,0.01,5
+0.012302754446864128,3,200,0.01,5
+0.011891470290720463,3,250,0.01,5
+0.011730164289474487,3,300,0.01,5
+```
+Car
+
+Pour le nombre d'epoch :
+```
+Validation Loss,Batch Size,Hidden Num,Learning Rate,Epochs
+0.011730164289474487,3,300,0.01,5
+0.00953193474560976,3,300,0.01,10
+0.008148823864758015,3,300,0.01,20
+```
+
+Finalement la taille du batch :
+```
+Validation Loss,Batch Size,Hidden Num,Learning Rate,Epochs
+0.008148823864758015,3,300,0.01,20
+0.009015226736664772,5,300,0.01,20
+0.01074074488133192,10,300,0.01,20
+```
+
+Comme on le peut le remarquer trop l'augmenter nous fait augmenter la perte car 
+
+
 Par la suite:
 1. Faut voir TensorBoard, afin de comprendre l'influance des divers hyper-paramètres.
 2. L'arrêt précoce pour enlever l'hyper-paramètre du nombre d'epoch.
