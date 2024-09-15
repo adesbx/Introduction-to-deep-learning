@@ -4,7 +4,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from torch.utils.data import random_split
-
+import csv
 
 class ShallowNet(nn.Module):
 
@@ -70,6 +70,11 @@ for batch_size in [3, 5, 10]:
 						# record validation loss
 					if n == nb_epochs-1:
 						models.append([model, loss_total/len(val_loader), batch_size, hidden_num, eta, nb_epochs])
+						with open('data.csv', 'a', newline='') as csvfile:
+							spamwriter = csv.writer(csvfile)
+							if csvfile.tell() == 0:
+								spamwriter.writerow(['Validation Loss', 'Batch Size', 'Hidden Num', 'Learning Rate', 'Epochs'])
+							spamwriter.writerow([(loss_total/len(val_loader)).item(), batch_size, hidden_num, eta, nb_epochs])
 						# print('batch value: \n', batch_size)
 						# print('nb_epoch value: \n', nb_epochs)
 						# print('hidden_run: ', hidden_num)
