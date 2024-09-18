@@ -44,7 +44,7 @@ Dans la méthodes forward, on implémente la logique du réseau, à savoir : cou
 
 Le poid de chaque entré est initialisé aléatoirement. On charge la données en découpant en 3 parties: train, validation puis test. Le jeu de données validation a été construit à partir de celui de train (on split le jeu en 2, 80% pour train et 20% pour validation).
 
-On entraine le modèle de façon itérative sur un échantillon $X$ mini-batch de train, $K$ couches cachées, un learning rate $L$ et $Y$ epochs. A la fin d'une epoch on **retient le dernier modèle** avec son erreur calculer sur le jeu de validation. Cela nous permet de retenir des modèles qui varient en fonction des hyper-paramètres suivant : taille du batch, nombre d'epoch, nombre de neurones pour la couche cachée, taux d'apprentissage.
+On entraine le modèle de façon itérative sur un échantillon $X$ mini-batch de train, $K$ neuronnes dans la couche cachée, un learning rate $L$ et $Y$ epochs. A la fin d'une epoch on **retient le dernier modèle** avec son erreur calculer sur le jeu de validation. Cela nous permet de retenir des modèles qui varient en fonction des hyper-paramètres suivant : taille du batch, nombre d'epoch, nombre de neurones pour la couche cachée, taux d'apprentissage.
 
 Pour finir on retient le meilleur modèle pour l'envoyer au test, et mesurer le taux de réussite de sa prédiction.
 
@@ -77,7 +77,7 @@ Validation Loss,Batch Size,Hidden Num,Learning Rate,Epochs
 ```
 Sur ces 3 exemples on peut voir la validation loss descendre énormement a chaque fois. L'augmenter va permettre donc de converger mais cependant il ne faut pas le mettre trop haut sinon l'effet sera inverse.
 
-Egalement le nombre de couche cachés est tout aussi important :
+Egalement le nombre de neuronnes dans la couche cachée est tout aussi important :
 ```
 Validation Loss,Batch Size,Hidden Num,Learning Rate,Epochs
 0.012341232970356941,3,150,0.01,5
