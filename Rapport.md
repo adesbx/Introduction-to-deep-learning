@@ -62,6 +62,11 @@ Pour un score de **0.9807**.
 
 Une trace des tests effectués avec chaque paramètre est disponible dans **data.csv**
 
+
+Nous avons calculer la corrélation entre chaque paramètre, comme on peut le voir le paramètre le plus important est le learning rate.
+
+![Correlation Analysis](Correlation.png "Correlation Analysis")
+
 On peut remarquer l'importance du learning rate notamment : 
 
 |Validation Loss|Batch Size|Hidden Num|Learning Rate|Epochs|
@@ -74,33 +79,34 @@ On peut remarquer l'importance du learning rate notamment :
 
 Sur ces 3 exemples on peut voir la validation loss descendre énormement a chaque fois. L'augmenter va permettre donc de converger mais cependant il ne faut pas le mettre trop haut sinon l'effet sera inverse.
 
-Egalement le nombre de neuronnes dans la couche cachée est tout aussi important :
-```
-Validation Loss,Batch Size,Hidden Num,Learning Rate,Epochs
-0.012341232970356941,3,150,0.01,5
-0.012302754446864128,3,200,0.01,5
-0.011891470290720463,3,250,0.01,5
-0.011730164289474487,3,300,0.01,5
-```
-Car
+Maintenant le nombre de neuronnes dans la couche cachée :
+
+|Validation Loss|Batch Size|Hidden Num|Learning Rate|Epochs|
+|---------------|----------|----------|-------------|------|
+|0.012341232970356941|3|150|0.01|5|
+|0.012302754446864128|3|200|0.01|5|
+|0.011891470290720463|3|250|0.01|5|
+|0.011730164289474487|3|300|0.01|5|
+
+On voit ici une légère augmentation entre 200 et 250 neuronnes. Alors que entre 150 et 200 il y avait une augmentation mais plus légére.
 
 Pour le nombre d'epoch :
-```
-Validation Loss,Batch Size,Hidden Num,Learning Rate,Epochs
-0.011730164289474487,3,300,0.01,5
-0.00953193474560976,3,300,0.01,10
-0.008148823864758015,3,300,0.01,20
-```
+|Validation Loss|Batch Size|Hidden Num|Learning Rate|Epochs|
+|---------------|----------|----------|-------------|------|
+|0.011730164289474487|3|300|0.01|5|
+|0.00953193474560976|3|300|0.01|10|
+|0.008148823864758015|3|300|0.01|20|
+
+On voit une bonne augmentation tant qu'on augmente le nombre d'epochs.
 
 Finalement la taille du batch :
-```
-Validation Loss,Batch Size,Hidden Num,Learning Rate,Epochs
-0.008148823864758015,3,300,0.01,20
-0.009015226736664772,5,300,0.01,20
-0.01074074488133192,10,300,0.01,20
-```
+|Validation Loss|Batch Size|Hidden Num|Learning Rate|Epochs|
+|---------------|----------|----------|-------------|------|
+|0.008148823864758015|3|300|0.01|20|
+|0.009015226736664772|5|300|0.01|20|
+|0.01074074488133192|10|300|0.01|20|
 
-Comme on le peut le remarquer trop l'augmenter nous fait augmenter la perte car 
+Comme on le peut le remarquer trop l'augmenter nous fait augmenter la perte. 
 
 
 Par la suite:
