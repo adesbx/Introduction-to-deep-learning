@@ -58,23 +58,20 @@ nb_epochs [5, 10, 20]
 ```
 Nos meilleurs paramètres sont :
 batch size = 3, nombre de neurones pour la couche cachée = 300, taux d'apprentissage = 0.01 et nombre d'epoch = 20
-Pour un score de **0.9807**
-
-Meilleur paramètre pour le moment : 
-Batch Size,Hidden Num,Learning Rate,Epochs
-3, 300, 0.01, 20
-avec un score de 0.9807
+Pour un score de **0.9807**. 
 
 Une trace des tests effectués avec chaque paramètre est disponible dans **data.csv**
 
 On peut remarquer l'importance du learning rate notamment : 
-```
-Validation Loss,Batch Size,Hidden Num,Learning Rate,Epochs
-0.09179344028234482,3,150,1e-05,5
-0.0533987320959568,3,150,0.0001,5
-0.025701027363538742,3,150,0.001,5
-0.012341232970356941,3,150,0.01,5
-```
+
+|Validation Loss|Batch Size|Hidden Num|Learning Rate|Epochs|
+|---------------|----------|----------|-------------|------|
+|0.09179344028234482|3|150|1e-05|5|
+|0.0533987320959568|3|150|0.0001|5|
+|0.025701027363538742|3|150|0.001|5|
+|0.012341232970356941|3|150|0.01|5|
+
+
 Sur ces 3 exemples on peut voir la validation loss descendre énormement a chaque fois. L'augmenter va permettre donc de converger mais cependant il ne faut pas le mettre trop haut sinon l'effet sera inverse.
 
 Egalement le nombre de neuronnes dans la couche cachée est tout aussi important :
