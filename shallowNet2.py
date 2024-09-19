@@ -66,7 +66,7 @@ def training_early_stopping(model, train_dataset, val_dataset, batch_size, loss_
 			patience -= 1
 		previous_loss_mean=local_loss_mean
 		previous_improvement=improvement
-	return model, n, previous_loss_mean
+	return model, n, previous_loss_mean.item()
 
 def hyper_param_tuning(train_dataset, val_dataset, loss_func, batch_size_values, hidden_neuron_values, eta_values):
 	models = []
