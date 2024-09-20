@@ -54,7 +54,7 @@ def validation_step(model, val_loader, loss_func, shape):
 		acc += torch.argmax(y,1) == torch.argmax(t,1)
 
 		# record validation loss
-	return loss_total/len(val_loader), acc/shape
+	return loss_total/len(val_loader), acc.mean()/shape
 
 def training_early_stopping(model, train_dataset, val_dataset, batch_size, loss_func, optim, max_epochs=100, min_delta=0.001, patience=2):
 	train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
@@ -75,8 +75,8 @@ def training_early_stopping(model, train_dataset, val_dataset, batch_size, loss_
 		previous_improvement=improvement
 		# écrire dans tensorboard
 		writer.add_scalar("Loss", local_loss_mean, n)
-		writer.add_scalar("Accuracy", accuracy[0], n)
-	return model, n, previous_loss_mean.item()
+		writer.add_scalar("Accuracy", accuracy, n)
+	return model, n, previous_loss_mean.item(), accuracy
 
 def hyper_param_tuning(train_dataset, val_dataset, loss_func, batch_size_values, hidden_neuron_values, eta_values):
 	models = []
@@ -85,7 +85,7 @@ def hyper_param_tuning(train_dataset, val_dataset, loss_func, batch_size_values,
 			model = ShallowNet(784, hidden_neuron, 10)
 			for eta in eta_values:
 				optim = torch.optim.SGD(model.parameters(), lr=eta)
-				model_trained, nb_epoch ,local_loss_mean = training_early_stopping(model, train_dataset, val_dataset, batch_size,
+				model_trained, nb_epoch ,local_loss_mean, accuracy = training_early_stopping(model, train_dataset, val_dataset, batch_size,
 						loss_func, optim)
 				model_info = [model, local_loss_mean, batch_size, hidden_neuron, eta, nb_epoch]
 				models.append(model_info)
@@ -94,6 +94,12 @@ def hyper_param_tuning(train_dataset, val_dataset, loss_func, batch_size_values,
 					if csvfile.tell() == 0:
 						spamwriter.writerow(['Validation Loss', 'Batch Size', 'Hidden Num', 'Learning Rate', 'Epochs'])
 					spamwriter.writerow(model_info[1:])
+
+				writer.add_hparams(
+                    {'lr': eta, 'batch_size': batch_size, 'hidden_neurons': hidden_neuron},
+                    {'Accuracy': accuracy, 'Validation Loss': local_loss_mean}
+                )
+                
 	best_model = min(models, key=lambda x: x[1])		
 	print("Meilleur hyper-paramètre \n", best_model[1:])
 	return best_model[0]
