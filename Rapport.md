@@ -108,10 +108,39 @@ Finalement la taille du batch :
 
 Comme on le peut le remarquer trop l'augmenter nous fait augmenter la perte. 
 
+Par la suite nous avons voulu tester avec de nouveaux paramètre (en prenant en compte les meilleurs paramètres de notre dernier test) et avons décider d'appliquer un early stopping pour le nombre d'epoch :
+
+```
+batch_size [1, 3, 5]
+hidden_num [250, 350, 500, 600]
+eta [0.005, 0.05,  0.01]
+```
+
+batch size : 1,3,5
+nombre de neuronnes couche cachée : 250, 350, 500, 600
+learning rate : 0.005, .05, .01
+
+Les meilleurs paramètre que nous avons eu sont :  batch size 1, nombre de neuronnes couche cachée 600 learning rate 0.01 et early stop a arreté le nombre d'epoch a 6
+Le taux pour un score de **0.9850**
+
+![Correlation Analysis](Correlation2.png "Correlation Analysis")
+(Seul les nouvelles donnée ont étaient utilisé)
+
+On peut voir que la correlation a nettement augmenter pour le batch size, hidden_num et Learning rate.
+
+Un paramètre qui pourrait potentiellement intéressant de continuer a monter serait le nombre de neuronnes dans la couche cachée.
+|Validation Loss|Batch Size|Hidden Num|Learning Rate|Epochs|
+|---------------|----------|----------|-------------|------|
+|0.007044011261314154|1|250|0.01|6|
+|0.006845048628747463|1|350|0.01|6|
+|0.006447544787079096|1|500|0.01|6|
+|0.0064147827215492725|1|600|0.01|6|
+
+Comme on peut le voir ici on voit une différence entre 350 et 500 mais cette différence est moins importante entre 500 et 600. Il serait intéressant de comparer cela a des valeurs allant bien au dela par exemple [600, 1200, 1500]
+
 
 Par la suite:
 1. Faut voir TensorBoard, afin de comprendre l'influance des divers hyper-paramètres.
-2. L'arrêt précoce pour enlever l'hyper-paramètre du nombre d'epoch.
 3. La bibliothèque ray Tune, pour cette argument suivant : " includes the latest hyperparameter search algorithms, integrates with TensorBoard and other analysis libraries, and natively supports distributed training".
-4. formater le code pour aller plus vite sur la partie 3 et 4.
+
 
