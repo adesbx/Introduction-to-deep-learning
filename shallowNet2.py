@@ -1,11 +1,11 @@
-import gzip
 import torch
+import csv
 import torch.nn as nn
 import torch.nn.functional as F
-from torch.utils.data import random_split
+from core import core
 from torch.utils.tensorboard import SummaryWriter
 writer = SummaryWriter()
-import csv
+
 
 class ShallowNet(nn.Module):
 
@@ -85,9 +85,9 @@ def hyper_param_tuning(train_dataset, val_dataset, loss_func, batch_size_values,
 			model = ShallowNet(784, hidden_neuron, 10)
 			for eta in eta_values:
 				optim = torch.optim.SGD(model.parameters(), lr=eta)
-				model_trained, nb_epoch ,local_loss_mean, accuracy = training_early_stopping(model, train_dataset, val_dataset, batch_size,
+				model_trained, nb_epoch ,local_loss_mean, accuracy = core.training_early_stopping(model, train_dataset, val_dataset, batch_size,
 						loss_func, optim)
-				model_info = [model, local_loss_mean, batch_size, hidden_neuron, eta, nb_epoch]
+				model_info = [model_trained, local_loss_mean, batch_size, hidden_neuron, eta, nb_epoch]
 				models.append(model_info)
 				with open('data.csv', 'a', newline='') as csvfile:
 					spamwriter = csv.writer(csvfile)
@@ -104,30 +104,9 @@ def hyper_param_tuning(train_dataset, val_dataset, loss_func, batch_size_values,
 	print("Meilleur hyper-paramètre \n", best_model[1:])
 	return best_model[0]
 
-def final_test(best_model, test_dataset):
-	acc = 0.
-	test_loader = torch.utils.data.DataLoader(test_dataset, batch_size=1, shuffle=False)
-	# on lit toutes les donnéees de test
-	for x,t in test_loader:
-		# on calcule la sortie du modèle
-		y = best_model(x)
-		# on regarde si la sortie est correcte
-		acc += torch.argmax(y,1) == torch.argmax(t,1)
-	# on affiche le pourcentage de bonnes réponses
-	print(acc/len(test_dataset))
-
-hyper_parameter = {
-"batch_size": 5,
-"nb_epochs": 10,
-"hidden_num": 250,
-"eta": 0.00001
-}
-train_dataset, val_dataset, test_dataset = load_split_data()
-loss_func = torch.nn.MSELoss(reduction='mean')
-# model = ShallowNet(784, hyper_parameter["hidden_num"], 10)
-# optim = torch.optim.SGD(model.parameters(), lr=hyper_parameter["eta"])
-# bestModel, n, loss_mean = training_early_stopping(model,train_dataset, val_dataset, hyper_parameter["batch_size"], loss_func, optim)
-# print("converge en ", n ,"epochs")
-best_model = hyper_param_tuning(train_dataset, val_dataset, loss_func, [3], [250], [0.001, 0.01])
-final_test(best_model, test_dataset)
-writer.flush()
+if __name__ == "__main__":
+	core = core()
+	train_dataset, val_dataset, test_dataset = core.load_split_data()
+	loss_func = torch.nn.MSELoss(reduction='mean')
+	best_model = hyper_param_tuning(train_dataset, val_dataset, loss_func, [3], [250], [0.001, 0.01])
+	core.final_test(best_model, test_dataset)
