@@ -3,6 +3,8 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from torch.utils.data import random_split
+from torch.utils.tensorboard import SummaryWriter
+writer = SummaryWriter()
 import csv
 
 class ShallowNet(nn.Module):
@@ -37,8 +39,9 @@ def train_step(model, train_loader, loss_func, optim):
 		optim.step()
 		optim.zero_grad()
 
-def validation_step(model, val_loader, loss_func):
+def validation_step(model, val_loader, loss_func, shape):
 	loss_total = 0
+	acc = 0.
 	model.eval() # prep model for evaluation
 	for x, t in val_loader:
 		# forward pass: compute predicted outputs by passing inputs to the model
@@ -46,8 +49,12 @@ def validation_step(model, val_loader, loss_func):
 		# calculate the loss
 		loss = loss_func(t,y)
 		loss_total += loss
+
+		#calculate the accuracy
+		acc += torch.argmax(y,1) == torch.argmax(t,1)
+
 		# record validation loss
-	return loss_total/len(val_loader)
+	return loss_total/len(val_loader), acc/shape
 
 def training_early_stopping(model, train_dataset, val_dataset, batch_size, loss_func, optim, max_epochs=100, min_delta=0.001, patience=2):
 	train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
@@ -56,7 +63,7 @@ def training_early_stopping(model, train_dataset, val_dataset, batch_size, loss_
 	previous_improvement = 1
 	for n in range(max_epochs):
 		train_step(model, train_loader, loss_func, optim)
-		local_loss_mean = validation_step(model, val_loader, loss_func)
+		local_loss_mean, accuracy = validation_step(model, val_loader, loss_func, len(val_dataset))
 		improvement = previous_loss_mean-local_loss_mean
 		if previous_improvement==improvement or improvement <= min_delta:
 			if patience == 0:
@@ -66,6 +73,9 @@ def training_early_stopping(model, train_dataset, val_dataset, batch_size, loss_
 			patience -= 1
 		previous_loss_mean=local_loss_mean
 		previous_improvement=improvement
+		# écrire dans tensorboard
+		writer.add_scalar("Loss", local_loss_mean, n)
+		writer.add_scalar("Accuracy", accuracy[0], n)
 	return model, n, previous_loss_mean.item()
 
 def hyper_param_tuning(train_dataset, val_dataset, loss_func, batch_size_values, hidden_neuron_values, eta_values):
@@ -112,5 +122,6 @@ loss_func = torch.nn.MSELoss(reduction='mean')
 # optim = torch.optim.SGD(model.parameters(), lr=hyper_parameter["eta"])
 # bestModel, n, loss_mean = training_early_stopping(model,train_dataset, val_dataset, hyper_parameter["batch_size"], loss_func, optim)
 # print("converge en ", n ,"epochs")
-best_model = hyper_param_tuning(train_dataset, val_dataset, loss_func, [5], [240, 250], [0.00001, 0.01])
+best_model = hyper_param_tuning(train_dataset, val_dataset, loss_func, [3], [250], [0.001, 0.01])
 final_test(best_model, test_dataset)
+writer.flush()

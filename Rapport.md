@@ -111,15 +111,10 @@ Comme on le peut le remarquer trop l'augmenter nous fait augmenter la perte.
 Par la suite nous avons voulu tester avec de nouveaux paramètre (en prenant en compte les meilleurs paramètres de notre dernier test) et avons décider d'appliquer un early stopping pour le nombre d'epoch :
 
 ```
-batch_size [1, 3, 5]
-hidden_num [250, 350, 500, 600]
-eta [0.005, 0.05,  0.01]
+batch size : [1,3,5]
+nombre de neuronnes couche cachée : [250, 350, 500, 600]
+learning rate : [0.005, .05, .01]
 ```
-
-batch size : 1,3,5
-nombre de neuronnes couche cachée : 250, 350, 500, 600
-learning rate : 0.005, .05, .01
-
 Les meilleurs paramètre que nous avons eu sont :  batch size 1, nombre de neuronnes couche cachée 600 learning rate 0.01 et early stop a arreté le nombre d'epoch a 6
 Le taux pour un score de **0.9850**
 
