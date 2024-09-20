@@ -29,7 +29,7 @@ def hyper_param_tuning(train_dataset, val_dataset, loss_func, batch_size_values,
 				optim = torch.optim.SGD(model.parameters(), lr=eta)
 				model_trained, nb_epoch ,local_loss_mean = core.training_early_stopping(model, train_dataset, val_dataset, batch_size,
 						loss_func, optim)
-				model_info = [model, local_loss_mean, batch_size, hidden_neuron, eta, nb_epoch]
+				model_info = [model_trained, local_loss_mean, batch_size, hidden_neuron, eta, nb_epoch]
 				models.append(model_info)
 				with open('data.csv', 'a', newline='') as csvfile:
 					spamwriter = csv.writer(csvfile)
