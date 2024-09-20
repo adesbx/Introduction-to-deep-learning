@@ -7,7 +7,7 @@ writer = SummaryWriter()
 class core():
 
 	def load_split_data(self, path: str = 'mnist.pkl.gz', percentage: list() = [0.8, 0.2]):
-		((data_train,label_train),(data_test,label_test)) = torch.load(gzip.open(path))
+		((data_train,label_train),(data_test,label_test)) = torch.load(gzip.open(path), weights_only=True)
 		train_dataset = torch.utils.data.TensorDataset(data_train,label_train)
 		train_dataset, val_dataset = random_split(train_dataset, percentage)
 		test_dataset = torch.utils.data.TensorDataset(data_test,label_test)
