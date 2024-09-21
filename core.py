@@ -60,9 +60,9 @@ class core():
 			previous_loss_mean=local_loss_mean
 			previous_improvement=improvement
 			# écrire dans tensorboard
-			writer.add_scalar("Loss", local_loss_mean, n)
-			writer.add_scalar("Accuracy", accuracy, n)
-			writer.flush()
+			# writer.add_scalar("Loss", local_loss_mean, n)
+			# writer.add_scalar("Accuracy", accuracy, n)
+			# writer.flush()
 		return model, n, previous_loss_mean.item(), accuracy
 
 	def final_test(self, best_model, test_dataset):

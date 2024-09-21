@@ -131,11 +131,21 @@ Un paramètre qui pourrait potentiellement intéressant de continuer a monter se
 |0.006447544787079096|1|500|0.01|6|
 |0.0064147827215492725|1|600|0.01|6|
 
-Comme on peut le voir ici on voit une différence entre 350 et 500 mais cette différence est moins importante entre 500 et 600. Il serait intéressant de comparer cela a des valeurs allant bien au dela par exemple [600, 1200, 1500]
+Comme on peut le voir ici on voit une différence entre 350 et 500 mais cette différence est moins importante entre 500 et 600. Il serait intéressant de comparer cela a des valeurs allant bien au dela par exemple [600, 1200, 1500]. Nous faisons donc de nouveau test avec les paramètres suivants : 
+
+```
+batch size : [1,3]
+nombre de neuronnes couche cachée : [600, 1200, 1500]
+learning rate : [0.01, 0.5, 0.1]
+```
+
+Les meilleurs paramètre que nous avons eu sont :  batch size 3, nombre de neuronnes couche cachée 1500 learning rate 0.1 et early stop a arreté le nombre d'epoch a 6
+Le taux pour un score de **0.9870**
 
 
 Par la suite:
-1. Faut voir TensorBoard, afin de comprendre l'influance des divers hyper-paramètres.
 3. La bibliothèque ray Tune, pour cette argument suivant : " includes the latest hyperparameter search algorithms, integrates with TensorBoard and other analysis libraries, and natively supports distributed training".
 
+Partie 3 :
 
+Une trace des tests effectués avec chaque paramètre est disponible dans **dataMlp.csv**

@@ -36,10 +36,9 @@ def hyper_param_tuning(train_dataset, val_dataset, loss_func, batch_size_values,
 					if csvfile.tell() == 0:
 						spamwriter.writerow(['Validation Loss', 'Batch Size', 'Hidden Num', 'Learning Rate', 'Epochs'])
 					spamwriter.writerow(model_info[1:])
-
 				writer.add_hparams(
-                    {'lr': eta, 'batch_size': batch_size, 'hidden_neurons': hidden_neuron},
-                    {'Accuracy': accuracy, 'Validation Loss': local_loss_mean}
+                    {'lr': eta, 'batch_size': batch_size, 'hidden_neurons': hidden_neuron, },
+                    {'Accuracy': accuracy.item(), 'Validation Loss': local_loss_mean}
                 )
                 
 	best_model = min(models, key=lambda x: x[1])		
@@ -50,5 +49,5 @@ if __name__ == "__main__":
 	core = core()
 	train_dataset, val_dataset, test_dataset = core.load_split_data()
 	loss_func = torch.nn.MSELoss(reduction='mean')
-	best_model = hyper_param_tuning(train_dataset, val_dataset, loss_func, [3], [250], [0.001, 0.01])
+	best_model = hyper_param_tuning(train_dataset, val_dataset, loss_func, [3], [1200], [0.1])
 	core.final_test(best_model, test_dataset)
