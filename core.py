@@ -40,7 +40,7 @@ class core():
 			acc += torch.argmax(y,1) == torch.argmax(t,1)
 
 			# record validation loss
-		return loss_total/len(val_loader), acc/shape
+		return loss_total/len(val_loader), acc.mean()/shape
 
 	def training_early_stopping(self, model, train_dataset, val_dataset, batch_size, loss_func, optim, max_epochs=100, min_delta=0.001, patience=5):
 		train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
@@ -61,9 +61,9 @@ class core():
 			previous_improvement=improvement
 			# écrire dans tensorboard
 			writer.add_scalar("Loss", local_loss_mean, n)
-			writer.add_scalar("Accuracy", accuracy[0], n)
+			writer.add_scalar("Accuracy", accuracy, n)
 			writer.flush()
-		return model, n, previous_loss_mean.item()
+		return model, n, previous_loss_mean.item(), accuracy
 
 	def final_test(self, best_model, test_dataset):
 		acc = 0.
