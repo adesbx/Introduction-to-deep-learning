@@ -148,4 +148,18 @@ Par la suite:
 
 Partie 3 :
 
+Passons maitenant au MLP, la seul différence avec le shallowNetwork c'est que pour le MLP il est possible de paramètrer le nombre de couches.
+
 Une trace des tests effectués avec chaque paramètre est disponible dans **dataMlp.csv**
+
+Un premier test a était effectué avec les paramètres suivants :
+
+```
+batch size : [1]
+nombre de couches cachée : [1, 5, 10, 20]
+nombre de neuronnes  dans les couches cachée : [250, 350, 500, 600]
+learning rate : [0.005, 0.05, 0.01]
+```
+
+Les meilleurs paramètre que nous avons eu sont :  batch size 1, nombre de couches cachée 5, nombre de neuronnes  dans les couches cachée 600 learning rate 0.01 et early stop a arreté le nombre d'epoch a 6
+Le taux pour un score de **0.9864**

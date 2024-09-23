@@ -29,19 +29,19 @@ def hyper_param_tuning(train_dataset, val_dataset, loss_func, batch_size_values,
 				optim = torch.optim.SGD(model.parameters(), lr=eta)
 				model_trained, nb_epoch ,local_loss_mean, accuracy = core.training_early_stopping(model, train_dataset, val_dataset, batch_size,
 						loss_func, optim)
-				model_info = [model_trained, local_loss_mean, batch_size, hidden_neuron, eta, nb_epoch]
+				model_info = [model_trained, accuracy.item(), local_loss_mean, batch_size, hidden_neuron, eta, nb_epoch]
 				models.append(model_info)
 				with open('data.csv', 'a', newline='') as csvfile:
 					spamwriter = csv.writer(csvfile)
 					if csvfile.tell() == 0:
-						spamwriter.writerow(['Validation Loss', 'Batch Size', 'Hidden Num', 'Learning Rate', 'Epochs'])
+						spamwriter.writerow(['Accuracy', 'Validation Loss', 'Batch Size', 'Hidden Num', 'Learning Rate', 'Epochs'])
 					spamwriter.writerow(model_info[1:])
 				writer.add_hparams(
                     {'lr': eta, 'batch_size': batch_size, 'hidden_neurons': hidden_neuron, },
                     {'Accuracy': accuracy.item(), 'Validation Loss': local_loss_mean}
                 )
                 
-	best_model = min(models, key=lambda x: x[1])		
+	best_model = max(models, key=lambda x: x[1])		
 	print("Meilleur hyper-paramètre \n", best_model[1:])
 	return best_model[0]
 
@@ -49,5 +49,5 @@ if __name__ == "__main__":
 	core = core()
 	train_dataset, val_dataset, test_dataset = core.load_split_data()
 	loss_func = torch.nn.MSELoss(reduction='mean')
-	best_model = hyper_param_tuning(train_dataset, val_dataset, loss_func, [3], [1200], [0.1])
+	best_model = hyper_param_tuning(train_dataset, val_dataset, loss_func, [9, 12, 15], [600], [0.01, 0.1])
 	core.final_test(best_model, test_dataset)
