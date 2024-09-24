@@ -28,6 +28,7 @@ class core():
 	def validation_step(self, model, val_loader, loss_func, shape):
 		loss_total = 0
 		acc = 0.
+		total_samples = 0
 		model.eval() # prep model for evaluation
 		for x, t in val_loader:
 			# forward pass: compute predicted outputs by passing inputs to the model
@@ -37,10 +38,10 @@ class core():
 			loss_total += loss
 
 			#calculate the accuracy
-			acc += torch.argmax(y,1) == torch.argmax(t,1)
-
+			acc += (torch.argmax(y,1) == torch.argmax(t,1)).sum().item()
+			total_samples += t.size(0)
 			# record validation loss
-		return loss_total/len(val_loader), acc.mean()/shape
+		return loss_total/len(val_loader), acc/total_samples
 
 	def training_early_stopping(self, model, train_dataset, val_dataset, batch_size, loss_func, optim, max_epochs=100, min_delta=0.001, patience=5):
 		train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
