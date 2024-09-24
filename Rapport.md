@@ -161,5 +161,10 @@ nombre de neuronnes  dans les couches cachée : [250, 350, 500, 600]
 learning rate : [0.005, 0.05, 0.01]
 ```
 
+![Correlation Analysis](Correlation3.png "Correlation Analysis")
+
+Comme on peut le voir le nombre de couche est très fortement corrélé. Ce paramètre joue donc un rôle important pour l'accuracy
+
+
 Les meilleurs paramètre que nous avons eu sont :  batch size 1, nombre de couches cachée 5, nombre de neuronnes  dans les couches cachée 600 learning rate 0.01 et early stop a arreté le nombre d'epoch a 6
 Le taux pour un score de **0.9864**
