@@ -142,9 +142,16 @@ learning rate : [0.01, 0.5, 0.1]
 Les meilleurs paramètre que nous avons eu sont :  batch size 3, nombre de neuronnes couche cachée 1500 learning rate 0.1 et early stop a arreté le nombre d'epoch a 6
 Le taux pour un score de **0.9870**
 
+Une question c'est posé lors des différentes éxécution, quel est l'impact de la taille du batch size sur la durée de l'éxécution. Nous avons donc réalisé différente run en changeant seulement la taille du batch size.
 
-Par la suite:
-3. La bibliothèque ray Tune, pour cette argument suivant : " includes the latest hyperparameter search algorithms, integrates with TensorBoard and other analysis libraries, and natively supports distributed training".
+![Batch size X Time](batchSizeWelapsedTime.png "Batch size X Time")
+
+Comme on peut le voir un batch size a 1 implique un temps d'éxécution beaucoup plus grand. Mais quel impact sur l'accuracy :
+
+![Batch size X Accuracy](batchSizeWaccuracy.png "Batch size X Accuracy")
+
+Comme on peut le voir prend un batch size trop grand impacte trop négativement l'accuracy
+
 
 Partie 3 :
 
@@ -168,3 +175,6 @@ Comme on peut le voir le nombre de couche est très fortement corrélé. Ce para
 
 Les meilleurs paramètre que nous avons eu sont :  batch size 1, nombre de couches cachée 5, nombre de neuronnes  dans les couches cachée 600 learning rate 0.01 et early stop a arreté le nombre d'epoch a 6
 Le taux pour un score de **0.9864**
+
+Par la suite:
+3. La bibliothèque ray Tune, pour cette argument suivant : " includes the latest hyperparameter search algorithms, integrates with TensorBoard and other analysis libraries, and natively supports distributed training".

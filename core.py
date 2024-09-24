@@ -43,7 +43,7 @@ class core():
 			# record validation loss
 		return loss_total/len(val_loader), acc/total_samples
 
-	def training_early_stopping(self, model, train_dataset, val_dataset, batch_size, loss_func, optim, max_epochs=100, min_delta=0.001, patience=5):
+	def training_early_stopping(self, model, train_dataset, val_dataset, batch_size, loss_func, optim, max_epochs=100, min_delta=0.001, patience=50):
 		train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
 		val_loader = torch.utils.data.DataLoader(val_dataset, batch_size=batch_size, shuffle=False)
 		previous_loss_mean = 1
