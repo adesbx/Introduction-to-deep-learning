@@ -152,10 +152,15 @@ Comme on peut le voir un batch size a 1 implique un temps d'éxécution beaucoup
 
 Comme on peut le voir prend un batch size trop grand impacte trop négativement l'accuracy
 
-Egalement nous nous intéressons a l'impact du learning rate sur l'accuracy et sur la durée d'éxecution 
+Egalement nous nous intéressons a l'impact du learning rate sur l'accuracy
 
 ![Learning Rate X Accuracy](accuWlR.png "Learning Rate X Accuracy")
 
+Finalement intéressons nous a l'impact du nombre de couche cachée:
+![Hidden num X Accuracy](batchSizeWaccuracy.png "Hidden num X Accuracy")
+![Hidden num X Elapsed time](batchSizeWelapsedTime.png "Hidden num X Elapsed time")
+
+Comme on peut le voir le meilleur learning rate est bien celui a 0.1 et avec une grosse différence par rapport a 0.01 .
 
 Partie 3 : 
 

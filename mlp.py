@@ -4,6 +4,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 from core import core
 from torch.utils.tensorboard import SummaryWriter
+import time
 writer = SummaryWriter()
 
 
@@ -32,14 +33,17 @@ def hyper_param_tuning(train_dataset, val_dataset, loss_func, batch_size_values,
 				model = Mlp(784, hidden_layer, hidden_neuron, 10)
 				for eta in eta_values:
 					optim = torch.optim.SGD(model.parameters(), lr=eta)
+					start_time = time.time()
 					model_trained, nb_epoch ,local_loss_mean, accuracy = core.training_early_stopping(model, train_dataset, val_dataset, batch_size,
 							loss_func, optim)
-					model_info = [model_trained, accuracy.item(), local_loss_mean, batch_size, hidden_layer, hidden_neuron, eta, nb_epoch]
+					end_time = time.time()
+					elapsed_time = end_time - start_time
+					model_info = [model_trained, accuracy, local_loss_mean, elapsed_time, batch_size, hidden_layer, hidden_neuron, eta, nb_epoch]
 					models.append(model_info)
-					with open('dataMlp.csv', 'a', newline='') as csvfile:
+					with open('dataMlpV2.csv', 'a', newline='') as csvfile:
 						spamwriter = csv.writer(csvfile)
 						if csvfile.tell() == 0:
-							spamwriter.writerow(['Accuracy', 'Validation Loss', 'Batch Size', 'Hidden layer', 'Hidden Num', 'Learning Rate', 'Epochs'])
+							spamwriter.writerow(['Accuracy', 'Validation Loss', 'Elapsed time', 'Batch Size', 'Hidden layer', 'Hidden Num', 'Learning Rate', 'Epochs'])
 						spamwriter.writerow(model_info[1:])
 	best_model = max(models, key=lambda x: x[1])
 	print("Meilleur hyper-paramètre \n", best_model[1:])
@@ -49,5 +53,5 @@ if __name__ == "__main__":
 	core = core()
 	train_dataset, val_dataset, test_dataset = core.load_split_data()
 	loss_func = torch.nn.MSELoss(reduction='mean')
-	best_model = hyper_param_tuning(train_dataset, val_dataset, loss_func, [1,3,5], [1, 5, 10, 20], [250, 350, 500, 600], [0.005, 0.05, 0.01])
+	best_model = hyper_param_tuning(train_dataset, val_dataset, loss_func, [9, 15, 30], [1, 5, 20, 50], [250, 350, 500, 600], [0.005, 0.05, 0.01, 0.1])
 	core.final_test(best_model, test_dataset)
