@@ -13,9 +13,11 @@ class core():
 		test_dataset = torch.utils.data.TensorDataset(data_test,label_test)
 		return train_dataset, val_dataset, test_dataset
 
-	def train_step(self, model, train_loader, loss_func, optim):
+	def train_step(self, model, train_loader, loss_func, optim, epoch):
 		# on lit toutes les données d'apprentissage
 		model.train()
+		running_loss = 0.0
+		i = 0
 		for x,t in train_loader:
 			# on calcule la sortie du modèle
 			y = model(x)
@@ -24,11 +26,21 @@ class core():
 			loss.backward()
 			optim.step()
 			optim.zero_grad()
+			running_loss += loss.item()
+			if i % 1000 == 999:    # every 1000 mini-batches...
+				# ...log the running loss
+				writer.add_scalar('loss/train',
+								running_loss / 1000,
+								epoch * len(train_loader) + i)
+				running_loss = 0.0
+			i += 1
 
-	def validation_step(self, model, val_loader, loss_func, shape):
+	def validation_step(self, model, val_loader, loss_func, epoch):
 		loss_total = 0
 		acc = 0.
 		total_samples = 0
+		i = 0.0
+		running_loss = 0.0
 		model.eval() # prep model for evaluation
 		for x, t in val_loader:
 			# forward pass: compute predicted outputs by passing inputs to the model
@@ -36,21 +48,28 @@ class core():
 			# calculate the loss
 			loss = loss_func(t,y)
 			loss_total += loss
-
 			#calculate the accuracy
 			acc += (torch.argmax(y,1) == torch.argmax(t,1)).sum().item()
 			total_samples += t.size(0)
+			running_loss += loss.item()
 			# record validation loss
+			if i % 1000 == 999:    # every 1000 mini-batches...
+				# ...log the running loss
+				writer.add_scalar('loss/validation',
+								running_loss / 1000,
+								epoch * len(val_loader) + i)
+				running_loss = 0.0
+			i += 1
 		return loss_total/len(val_loader), acc/total_samples
 
-	def training_early_stopping(self, model, train_dataset, val_dataset, batch_size, loss_func, optim, max_epochs=100, min_delta=0.001, patience=5):
+	def training_early_stopping(self, model, train_dataset, val_dataset, batch_size, loss_func, optim, max_epochs=100, min_delta=0.0005, patience=10):
 		train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
 		val_loader = torch.utils.data.DataLoader(val_dataset, batch_size=batch_size, shuffle=False)
 		previous_loss_mean = 1
 		previous_improvement = 1
 		for n in range(max_epochs):
-			self.train_step(model, train_loader, loss_func, optim)
-			local_loss_mean, accuracy = self.validation_step(model, val_loader, loss_func, len(val_dataset))
+			self.train_step(model, train_loader, loss_func, optim, n)
+			local_loss_mean, accuracy = self.validation_step(model, val_loader, loss_func, n)
 			improvement = previous_loss_mean-local_loss_mean
 			if previous_improvement==improvement or improvement <= min_delta:
 				if patience == 0:
@@ -60,10 +79,7 @@ class core():
 				patience -= 1
 			previous_loss_mean=local_loss_mean
 			previous_improvement=improvement
-			# écrire dans tensorboard
-			# writer.add_scalar("Loss", local_loss_mean, n)
-			# writer.add_scalar("Accuracy", accuracy, n)
-			# writer.flush()
+			writer.flush()
 		return model, n, previous_loss_mean.item(), accuracy
 
 	def final_test(self, best_model, test_dataset):
