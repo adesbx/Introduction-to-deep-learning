@@ -146,21 +146,24 @@ Une question c'est posé lors des différentes éxécution, quel est l'impact de
 
 ![Batch size X Time](batchSizeWelapsedTime.png "Batch size X Time")
 
-Comme on peut le voir un batch size a 1 implique un temps d'éxécution beaucoup plus grand. Mais quel impact sur l'accuracy :
+Comme on peut le voir un batch size a 1 implique un temps d'éxécution beaucoup plus grand. Il pourrait être intéressant de le baisser mais quel impact sur l'accuracy :
 
 ![Batch size X Accuracy](batchSizeWaccuracy.png "Batch size X Accuracy")
 
-Comme on peut le voir prend un batch size trop grand impacte trop négativement l'accuracy
+Comme on peut le voir prend un batch size trop grand impacte trop négativement l'accuracy. Soit une baisse de 0.05 sur l'accuracy.
+Sur une machine puissante et si l'on possède beaucoup de temps il est alors préférable de garder un batch size petit. Si on cherche contraint par le temps alors il serai prérérable de prendre un batch size ≃ 9 qui nous donnerait une accuracy de ≃ 0.96 .
 
 Egalement nous nous intéressons a l'impact du learning rate sur l'accuracy
 
 ![Learning Rate X Accuracy](accuWlR.png "Learning Rate X Accuracy")
 
-Finalement intéressons nous a l'impact du nombre de couche cachée:
-![Hidden num X Accuracy](batchSizeWaccuracy.png "Hidden num X Accuracy")
-![Hidden num X Elapsed time](batchSizeWelapsedTime.png "Hidden num X Elapsed time")
+Comme on peut le voir le meilleur learning rate est bien celui a 0.1 et avec une différence notable par rapport a 0.01 (Soit une perte de 0.012).
 
-Comme on peut le voir le meilleur learning rate est bien celui a 0.1 et avec une grosse différence par rapport a 0.01 .
+Finalement intéressons nous a l'impact du nombre de neuronnes dans la couche cachée:
+![Hidden num X Accuracy](hiddenWaccuracy.png "Hidden num X Accuracy")
+![Hidden num X Elapsed time](hiddenWelapsedTime.png "Hidden num X Elapsed time")
+
+Cette fois ci on voit une très légére augmentation de l'accuracy (a partir de 600 neuronnes petite évolution). Mais impact beaucoup le temps de calcul. Il serait donc plus intéressant de rester a un nombre de neuronnes < 600. ////////Sinon refaire des test entre 600 et 1200////////:
 
 Partie 3 : 
 
