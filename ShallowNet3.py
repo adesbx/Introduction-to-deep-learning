@@ -46,7 +46,7 @@ def objective(trial):
     global test_dataset_g
     test_dataset_g = test_dataset
     batch_size = trial.suggest_int("batch", 3, 100)
-    loss_func = torch.nn.MSELoss(reduction='mean')
+    loss_func = torch.nn.CrossEntropyLoss()
     # Training of the model.
     start_time = time.time()
     model_trained, nb_epoch ,local_loss_mean, accuracy = core.training_early_stopping(model, train_dataset, val_dataset, batch_size, loss_func, optimizer, trial)
