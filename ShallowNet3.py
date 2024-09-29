@@ -26,7 +26,7 @@ class ShallowNet(nn.Module):
         return x
     
 def define_model(trial):
-    # We optimize the number of layers, hidden units and dropout ratio in each layer.
+    # We optimize the hidden units.
     hidden_neuron = trial.suggest_int("n_units_hidenlayer", 500, 2000)
     model = ShallowNet(784, hidden_neuron, 10)
     return model
@@ -46,7 +46,7 @@ def objective(trial):
     global test_dataset_g
     test_dataset_g = test_dataset
     batch_size = trial.suggest_int("batch", 3, 100)
-    loss_func = torch.nn.CrossEntropyLoss()
+    loss_func = torch.nn.MSELoss() # torch.nn.CrossEntropyLoss() TODO ça marche pas !
     # Training of the model.
     start_time = time.time()
     model_trained, nb_epoch ,local_loss_mean, accuracy = core.training_early_stopping(model, train_dataset, val_dataset, batch_size, loss_func, optimizer, trial)
