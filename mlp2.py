@@ -38,7 +38,7 @@ def define_model(trial):
             (trial.suggest_int(f'nlayer{n}', 200, 1000),
              n_output)
         )
-    layers_in_out.append(n_output, 10)
+    layers_in_out.append((n_output, 10))
     model = Mlp(n_layers, layers_in_out)
     return model
 
@@ -63,18 +63,18 @@ def objective(trial):
     end_time = time.time()
     elapsed_time = end_time - start_time
     # TODO write good informations
-    # model_info = [model_trained, accuracy, local_loss_mean, elapsed_time, batch_size, model.layers_nbr, lr, nb_epoch]
-    # trial.set_user_attr(key="model", value=model_trained)
-    # with open('dataV2.csv', 'a', newline='') as csvfile:
-    #     spamwriter = csv.writer(csvfile)
-    #     if csvfile.tell() == 0:
-    #         spamwriter.writerow(['Accuracy', 'Validation Loss', 'Elapsed time','Batch Size', 'Hidden Num', 'Learning Rate', 'Epochs'])
-    #     spamwriter.writerow(model_info[1:])
-    # writer.add_hparams(
-    #     {'lr': lr, 'batch_size': batch_size, 'hidden_neurons': model.hidelayer1.out_features, 'nb_epoch': nb_epoch},
-    #     {'hparam/Accuracy': accuracy, 'hparam/Validation Loss': local_loss_mean, 'hparam/time': elapsed_time}
-    # )
-    # return accuracy
+    model_info = [model_trained, accuracy, local_loss_mean, elapsed_time, batch_size, model.hidden_layers.out_features, model.layers_nbr.out_features, lr, nb_epoch]
+    trial.set_user_attr(key="model", value=model_trained)
+    with open('dataMlp2.csv', 'a', newline='') as csvfile:
+        spamwriter = csv.writer(csvfile)
+        if csvfile.tell() == 0:
+            spamwriter.writerow(['Accuracy', 'Validation Loss', 'Elapsed time', 'Batch Size', 'Hidden layer', 'Hidden Num', 'Learning Rate', 'Epochs'])
+        spamwriter.writerow(model_info[1:])
+    writer.add_hparams(
+        {'lr': lr, 'batch_size': batch_size, 'hidden_neurons': model.hidden_layers.out_features, 'layers': model.layers_nbr.out_features,'nb_epoch': nb_epoch},
+        {'hparam/Accuracy': accuracy, 'hparam/Validation Loss': local_loss_mean, 'hparam/time': elapsed_time}
+    )
+    return accuracy
 
 if __name__ == "__main__":
     study = optuna.create_study(direction="maximize")

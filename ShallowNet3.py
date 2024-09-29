@@ -54,7 +54,7 @@ def objective(trial):
     elapsed_time = end_time - start_time
     model_info = [model_trained, accuracy, local_loss_mean, elapsed_time, batch_size, model.hidelayer1.out_features, lr, nb_epoch]
     trial.set_user_attr(key="model", value=model_trained)
-    with open('dataV2.csv', 'a', newline='') as csvfile:
+    with open('./csv/dataV2.csv', 'a', newline='') as csvfile:
         spamwriter = csv.writer(csvfile)
         if csvfile.tell() == 0:
             spamwriter.writerow(['Accuracy', 'Validation Loss', 'Elapsed time','Batch Size', 'Hidden Num', 'Learning Rate', 'Epochs'])

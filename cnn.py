@@ -48,7 +48,7 @@ def hyper_param_tuning(train_dataset, val_dataset, loss_func, batch_size_values,
 			elapsed_time = end_time - start_time
 			model_info = [model_trained, accuracy, local_loss_mean, elapsed_time, batch_size, eta, nb_epoch]
 			models.append(model_info)
-			with open('dataCnn.csv', 'a', newline='') as csvfile:
+			with open('./csv/dataCnn.csv', 'a', newline='') as csvfile:
 				spamwriter = csv.writer(csvfile)
 				if csvfile.tell() == 0:
 					spamwriter.writerow(['Accuracy', 'Validation Loss', 'Elapsed time', 'Batch Size', 'Learning Rate', 'Epochs'])

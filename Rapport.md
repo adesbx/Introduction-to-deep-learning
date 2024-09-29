@@ -65,7 +65,7 @@ Une trace des tests effectués avec chaque paramètre est disponible dans **data
 
 Nous avons calculer la corrélation entre chaque paramètre, comme on peut le voir le paramètre le plus important est le learning rate.
 
-![Correlation Analysis](Correlation.png "Correlation Analysis")
+![Correlation Analysis](./img/Correlation.png "Correlation Analysis")
 
 On peut remarquer l'importance du learning rate notamment : 
 
@@ -118,7 +118,7 @@ learning rate : [0.005, .05, .01]
 Les meilleurs paramètre que nous avons eu sont :  batch size 1, nombre de neuronnes couche cachée 600 learning rate 0.01 et early stop a arreté le nombre d'epoch a 6
 Le taux pour un score de **0.9850**
 
-![Correlation Analysis](Correlation2.png "Correlation Analysis")
+![Correlation Analysis](./img/Correlation2.png "Correlation Analysis")
 (Seul les nouvelles donnée ont étaient utilisé)
 
 On peut voir que la correlation a nettement augmenter pour le batch size, hidden_num et Learning rate.
@@ -144,26 +144,31 @@ Le taux pour un score de **0.9870**
 
 Une question c'est posé lors des différentes éxécution, quel est l'impact de la taille du batch size sur la durée de l'éxécution. Nous avons donc réalisé différente run en changeant seulement la taille du batch size.
 
-![Batch size X Time](batchSizeWelapsedTime.png "Batch size X Time")
+![Batch size X Time](./img/batchSizeWelapsedTime.png "Batch size X Time")
 
 Comme on peut le voir un batch size a 1 implique un temps d'éxécution beaucoup plus grand. Il pourrait être intéressant de le baisser mais quel impact sur l'accuracy :
 
-![Batch size X Accuracy](batchSizeWaccuracy.png "Batch size X Accuracy")
+![Batch size X Accuracy](./img/batchSizeWaccuracy.png "Batch size X Accuracy")
 
 Comme on peut le voir prend un batch size trop grand impacte trop négativement l'accuracy. Soit une baisse de 0.05 sur l'accuracy.
 Sur une machine puissante et si l'on possède beaucoup de temps il est alors préférable de garder un batch size petit. Si on cherche contraint par le temps alors il serai prérérable de prendre un batch size ≃ 9 qui nous donnerait une accuracy de ≃ 0.96 .
 
 Egalement nous nous intéressons a l'impact du learning rate sur l'accuracy
 
-![Learning Rate X Accuracy](accuWlR.png "Learning Rate X Accuracy")
+![Learning Rate X Accuracy](./img/accuWlR.png "Learning Rate X Accuracy")
 
 Comme on peut le voir le meilleur learning rate est bien celui a 0.1 et avec une différence notable par rapport a 0.01 (Soit une perte de 0.012).
 
 Finalement intéressons nous a l'impact du nombre de neuronnes dans la couche cachée:
-![Hidden num X Accuracy](hiddenWaccuracy.png "Hidden num X Accuracy")
-![Hidden num X Elapsed time](hiddenWelapsedTime.png "Hidden num X Elapsed time")
+![Hidden num X Accuracy](./img/hiddenWaccuracy.png "Hidden num X Accuracy")
+![Hidden num X Elapsed time](./img/hiddenWelapsedTime.png "Hidden num X Elapsed time")
 
 Cette fois ci on voit une très légére augmentation de l'accuracy (a partir de 600 neuronnes petite évolution). Mais impact beaucoup le temps de calcul. Il serait donc plus intéressant de rester a un nombre de neuronnes < 600. ////////Sinon refaire des test entre 600 et 1200////////:
+
+Par la suite nous avons ajouté un find tunning avec l'aide de optuna //////EXPLIQUER////////
+
+Les meilleurs paramètre que nous avons eu sont :  batch size 100, nombre de neuronnes couche cachée 1685 learning rate 0.0005 et early stop a arreté le nombre d'epoch a X
+Le taux pour un score de **0.9878**
 
 Partie 3 : 
 
@@ -180,13 +185,21 @@ nombre de neuronnes  dans les couches cachée : [250, 350, 500, 600]
 learning rate : [0.005, 0.05, 0.01]
 ```
 
-![Correlation Analysis](Correlation3.png "Correlation Analysis")
+![Correlation Analysis](./img/Correlation3.png "Correlation Analysis")
 
 Comme on peut le voir le nombre de couche est très fortement corrélé. Ce paramètre joue donc un rôle important pour l'accuracy
-
 
 Les meilleurs paramètre que nous avons eu sont :  batch size 1, nombre de couches cachée 5, nombre de neuronnes  dans les couches cachée 600 learning rate 0.01 et early stop a arreté le nombre d'epoch a 6
 Le taux pour un score de **0.9864**
 
-Par la suite:
-3. La bibliothèque ray Tune, pour cette argument suivant : " includes the latest hyperparameter search algorithms, integrates with TensorBoard and other analysis libraries, and natively supports distributed training".
+
+Partie 4 : 
+
+Pour concevoir l'architecture nous nous sommes inspiré de l'architecture LeNet5
+
+![Lenet5](./img/lenet5.png "Lenet5")
+
+Notre architecture posssède donc 2 couches convutionelles, 2 couches entièrement connectée (full connection) et une sortie. On utilise également R
+elu comme fonction d'activation.
+
+
