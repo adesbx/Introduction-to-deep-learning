@@ -53,5 +53,5 @@ if __name__ == "__main__":
 	core = core()
 	train_dataset, val_dataset, test_dataset = core.load_split_data()
 	loss_func = torch.nn.MSELoss(reduction='mean')
-	best_model = hyper_param_tuning(train_dataset, val_dataset, loss_func, [9, 15, 30], [1, 5, 20, 50], [250, 350, 500, 600], [0.005, 0.05, 0.01, 0.1])
+	best_model = hyper_param_tuning(train_dataset, val_dataset, loss_func, [9, 15, 30], [1, 5, 20, 50], [350, 500, 600], [0.05, 0.01, 0.1])
 	core.final_test(best_model, test_dataset)
