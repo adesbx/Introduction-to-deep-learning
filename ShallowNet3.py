@@ -27,7 +27,7 @@ class ShallowNet(nn.Module):
     
 def define_model(trial):
     # We optimize the number of layers, hidden units and dropout ratio in each layer.
-    hidden_neuron = trial.suggest_int("n_units_hidenlayer", 4, 128)
+    hidden_neuron = trial.suggest_int("n_units_hidenlayer", 500, 2000)
     model = ShallowNet(784, hidden_neuron, 10)
     return model
 
@@ -37,7 +37,7 @@ def objective(trial):
     model = define_model(trial)
 
     # Generate the optimizers.
-    optimizer_name = trial.suggest_categorical("optimizer", ["Adam", "RMSprop", "SGD"])
+    optimizer_name = trial.suggest_categorical("optimizer", ["Adam", "SGD"])
     lr = trial.suggest_float("lr", 1e-5, 1e-1, log=True)
     optimizer = getattr(torch.optim, optimizer_name)(model.parameters(), lr=lr)
 
@@ -45,7 +45,7 @@ def objective(trial):
     train_dataset, val_dataset, test_dataset = core.load_split_data()
     global test_dataset_g
     test_dataset_g = test_dataset
-    batch_size = trial.suggest_int("batch", 3, 50)
+    batch_size = trial.suggest_int("batch", 3, 100)
     loss_func = torch.nn.MSELoss(reduction='mean')
     # Training of the model.
     start_time = time.time()
@@ -53,6 +53,7 @@ def objective(trial):
     end_time = time.time()
     elapsed_time = end_time - start_time
     model_info = [model_trained, accuracy, local_loss_mean, elapsed_time, batch_size, model.hidelayer1.out_features, lr, nb_epoch]
+    trial.set_user_attr(key="model", value=model_trained)
     with open('dataV2.csv', 'a', newline='') as csvfile:
         spamwriter = csv.writer(csvfile)
         if csvfile.tell() == 0:
@@ -73,7 +74,7 @@ def set_pytorch_multicore():
 if __name__ == "__main__":
     # set_pytorch_multicore()
     study = optuna.create_study(direction="maximize")
-    study.optimize(objective, n_trials=2, timeout=600)
+    study.optimize(objective,n_trials=1000)
 
     pruned_trials = study.get_trials(deepcopy=False, states=[TrialState.PRUNED])
     complete_trials = study.get_trials(deepcopy=False, states=[TrialState.COMPLETE])
@@ -94,4 +95,4 @@ if __name__ == "__main__":
         print("    {}: {}".format(key, value))
 
 
-    core.final_test(trial, test_dataset_g)
+    core.final_test(trial.user_attrs["model"], test_dataset_g)
