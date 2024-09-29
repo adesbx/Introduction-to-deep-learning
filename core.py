@@ -1,5 +1,6 @@
 import gzip
 import torch
+import optuna
 from torch.utils.data import random_split
 from torch.utils.tensorboard import SummaryWriter
 writer = SummaryWriter()
@@ -62,9 +63,10 @@ class core():
 			i += 1
 		return loss_total/len(val_loader), acc/total_samples
 
-	def training_early_stopping(self, model, train_dataset, val_dataset, batch_size, loss_func, optim, max_epochs=100, min_delta=0.0005, patience=10):
+	def training_early_stopping(self, model, train_dataset, val_dataset, batch_size, loss_func, optim, trial, max_epochs=100, min_delta=0.0005, patience=10):
 		train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
 		val_loader = torch.utils.data.DataLoader(val_dataset, batch_size=batch_size, shuffle=False)
+
 		previous_loss_mean = 1
 		previous_improvement = 1
 		for n in range(max_epochs):
@@ -79,6 +81,12 @@ class core():
 				patience -= 1
 			previous_loss_mean=local_loss_mean
 			previous_improvement=improvement
+
+			trial.report(accuracy, n)
+
+			# Handle pruning based on the intermediate value.
+			if trial.should_prune():
+				raise optuna.exceptions.TrialPruned()
 			writer.flush()
 		return model, n, previous_loss_mean.item(), accuracy
 
