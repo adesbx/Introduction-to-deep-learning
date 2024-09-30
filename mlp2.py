@@ -8,20 +8,20 @@ from core import core
 from torch.utils.tensorboard import SummaryWriter
 import time
 writer = SummaryWriter()
-
+core = core()
 
 class Mlp(nn.Module):
 
     def __init__(self, layers_nbr, layers_in_out):
         super(Mlp, self).__init__()
         self.layers_nbr = layers_nbr
-        self.hidden_layers = nn.ModuleList([nn.Linear(layers_in_out[0][0], layers_in_out[0][1])])
-        for n in range(1,layers_nbr-1):
-            self.hidden_layers.append(nn.Linear(layers_in_out[n][0], layers_in_out[0][1]))
-        self.output = nn.Linear(layers_in_out[layers_nbr][0], 
-                                layers_in_out[layers_nbr][1])
+        self.hidden_layers = nn.ModuleList()
+        for n in range(layers_nbr-1):
+            self.hidden_layers.append(nn.Linear(layers_in_out[n][0], layers_in_out[n][1]))
+        self.output = nn.Linear(layers_in_out[layers_nbr-1][0],
+                                layers_in_out[layers_nbr-1][1])
     def forward(self, x):
-        for layer in self.hidden_layers: 
+        for layer in self.hidden_layers:
             x = layer(x)
             x = F.relu(x)
         x = self.output(x)
@@ -32,10 +32,10 @@ def define_model(trial):
     n_layers = trial.suggest_int("n_layers", 2, 10)
     layers_in_out = [(784, trial.suggest_int("n_layer1", 200, 1000))]
     n_output= None
-    for n in range(n_layers-2):
+    for n in range(n_layers-1):
         n_output = trial.suggest_int(f'nlayer{n}', 200, 1000)
         layers_in_out.append(
-            (trial.suggest_int(f'nlayer{n}', 200, 1000),
+            (layers_in_out[n][1],
              n_output)
         )
     layers_in_out.append((n_output, 10))
