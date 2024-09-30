@@ -17,7 +17,9 @@ class Mlp(nn.Module):
         self.layers_nbr = layers_nbr
         self.hidden_layers = nn.ModuleList()
         for n in range(layers_nbr-1):
+            print(layers_in_out[n])
             self.hidden_layers.append(nn.Linear(layers_in_out[n][0], layers_in_out[n][1]))
+        print(layers_in_out[layers_nbr-1])
         self.output = nn.Linear(layers_in_out[layers_nbr-1][0],
                                 layers_in_out[layers_nbr-1][1])
     def forward(self, x):
@@ -32,7 +34,7 @@ def define_model(trial):
     n_layers = trial.suggest_int("n_layers", 2, 10)
     layers_in_out = [(784, trial.suggest_int("n_layer1", 200, 1000))]
     n_output= None
-    for n in range(n_layers-1):
+    for n in range(n_layers-2):
         n_output = trial.suggest_int(f'nlayer{n}', 200, 1000)
         layers_in_out.append(
             (layers_in_out[n][1],
