@@ -64,8 +64,10 @@ def objective(trial):
     model_trained, nb_epoch ,local_loss_mean, accuracy = core.training_early_stopping(model, train_dataset, val_dataset, batch_size, loss_func, optimizer, trial)
     end_time = time.time()
     elapsed_time = end_time - start_time
+    # List of out_features for hidden_layers
+    hidden_out_features = [layer.out_features for layer in model.hidden_layers]
     # TODO write good informations
-    model_info = [model_trained, accuracy, local_loss_mean, elapsed_time, batch_size, model.hidden_layers.out_features, model.layers_nbr.out_features, lr, nb_epoch]
+    model_info = [model_trained, accuracy, local_loss_mean, elapsed_time, batch_size, hidden_out_features, model.layers_nbr, lr, nb_epoch]
     trial.set_user_attr(key="model", value=model_trained)
     with open('dataMlp2.csv', 'a', newline='') as csvfile:
         spamwriter = csv.writer(csvfile)
@@ -73,7 +75,7 @@ def objective(trial):
             spamwriter.writerow(['Accuracy', 'Validation Loss', 'Elapsed time', 'Batch Size', 'Hidden layer', 'Hidden Num', 'Learning Rate', 'Epochs'])
         spamwriter.writerow(model_info[1:])
     writer.add_hparams(
-        {'lr': lr, 'batch_size': batch_size, 'hidden_neurons': model.hidden_layers.out_features, 'layers': model.layers_nbr.out_features,'nb_epoch': nb_epoch},
+        {'lr': lr, 'batch_size': batch_size, 'hidden_neurons': str(hidden_out_features), 'layers': model.layers_nbr,'nb_epoch': nb_epoch},
         {'hparam/Accuracy': accuracy, 'hparam/Validation Loss': local_loss_mean, 'hparam/time': elapsed_time}
     )
     return accuracy
