@@ -192,6 +192,8 @@ Comme on peut le voir le nombre de couche est très fortement corrélé. Ce para
 Les meilleurs paramètre que nous avons eu sont :  batch size 1, nombre de couches cachée 5, nombre de neuronnes  dans les couches cachée 600 learning rate 0.01 et early stop a arreté le nombre d'epoch a 6
 Le taux pour un score de **0.9864**
 
+Après optuna meilleur résultat : 
+0.9879365079365079,0.0024168125819414854,502.8250846862793,9,"[837, 817]",3,0.00010759508073936264,14
 
 Partie 4 : 
 

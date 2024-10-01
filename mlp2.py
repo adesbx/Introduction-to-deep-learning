@@ -33,7 +33,7 @@ def define_model(trial):
     # We optimize the number of layers, hidden units and dropout ratio in each layer.
     n_layers = trial.suggest_int("n_layers", 2, 10)
     layers_in_out = [(784, trial.suggest_int("n_layer1", 200, 1000))]
-    n_output= None
+    n_output = layers_in_out[0][1] #output of the first layer in the case we have 2 layer
     for n in range(n_layers-2):
         n_output = trial.suggest_int(f'nlayer{n}', 200, 1000)
         layers_in_out.append(
@@ -69,7 +69,7 @@ def objective(trial):
     # TODO write good informations
     model_info = [model_trained, accuracy, local_loss_mean, elapsed_time, batch_size, hidden_out_features, model.layers_nbr, lr, nb_epoch]
     trial.set_user_attr(key="model", value=model_trained)
-    with open('dataMlp2.csv', 'a', newline='') as csvfile:
+    with open('./csv/dataMlp2.csv', 'a', newline='') as csvfile:
         spamwriter = csv.writer(csvfile)
         if csvfile.tell() == 0:
             spamwriter.writerow(['Accuracy', 'Validation Loss', 'Elapsed time', 'Batch Size', 'Hidden layer', 'Hidden Num', 'Learning Rate', 'Epochs'])
