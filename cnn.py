@@ -2,7 +2,7 @@ import torch
 import csv
 import torch.nn as nn
 import torch.nn.functional as F
-from core2 import core
+from core import core
 from torch.utils.tensorboard import SummaryWriter
 import time
 writer = SummaryWriter()
