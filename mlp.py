@@ -2,6 +2,7 @@
 import torch
 import csv
 from torch import Tensor
+from torch.utils.data import TensorDataset
 from torch.nn import Module, MSELoss, CrossEntropyLoss, Linear, ModuleList
 import torch.nn.functional as F
 from core import core
@@ -17,14 +18,37 @@ class Mlp(Module):
     Args:
         Module (nn.Module):
     """
-    def __init__(self, input_nbr, hidden_layers_nbr, hidden_neuron_nbr, output_nbr):
+
+    def __init__(
+        self,
+        input_nbr: int,
+        hidden_layers_nbr: int,
+        hidden_neuron_nbr: int,
+        output_nbr: int,
+    ):
+        """Constructor
+
+        Args:
+            input_nbr (int):
+            hidden_layers_nbr (int):
+            hidden_neuron_nbr (int):
+            output_nbr (int):
+        """
         super(Mlp, self).__init__()
         self.hidden_layers = ModuleList([Linear(input_nbr, hidden_neuron_nbr)])
         for n in range(hidden_layers_nbr - 1):
             self.hidden_layers.append(Linear(hidden_neuron_nbr, hidden_neuron_nbr))
         self.output = Linear(hidden_neuron_nbr, output_nbr)
 
-    def forward(self, x):
+    def forward(self, x: Tensor) -> Tensor:
+        """process of a neuron in the model
+
+        Args:
+                x (Tensor): the batch of data selected
+
+        Returns:
+                Tensor: output of the neuron
+        """
         for layer in self.hidden_layers:
             x = layer(x)
             x = F.relu(x)
@@ -33,14 +57,28 @@ class Mlp(Module):
 
 
 def hyper_param_tuning(
-    train_dataset,
-    val_dataset,
-    loss_func,
-    batch_size_values,
-    hidden_layers_values,
-    hidden_neuron_values,
-    eta_values,
-):
+    train_dataset: TensorDataset,
+    val_dataset: TensorDataset,
+    loss_func: MSELoss | CrossEntropyLoss,
+    batch_size_values: list[int],
+    hidden_layers_values: list[int],
+    hidden_neuron_values: list[int],
+    eta_values: list[float],
+) -> Module:
+    """grid search for tune best hyperparameter
+
+    Args:
+            train_dataset (TensorDataset):
+            val_dataset (TensorDataset):
+            loss_func (MSELoss | CrossEntropyLoss): function to minimize
+            batch_size_values (list[int]): batch pick in future data_loader
+            hidden_layers_values (list[int]): number of layer in the mlp
+            hidden_neuron_values (list[int]): number of neurons in the hidden layer
+            eta_values (list[float]): learning rate
+
+    Returns:
+            Module: The best model
+    """
     models = []
     for batch_size in batch_size_values:
         for hidden_neuron in hidden_neuron_values:
