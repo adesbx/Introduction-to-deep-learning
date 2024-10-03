@@ -2,7 +2,6 @@
 
 import torch
 import csv
-import os
 from torch import Tensor
 from torch.nn import Module, MSELoss, CrossEntropyLoss, Linear
 import torch.nn.functional as F
