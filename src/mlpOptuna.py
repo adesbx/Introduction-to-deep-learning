@@ -6,9 +6,8 @@ import csv
 import optuna
 from optuna.trial import TrialState
 from torch import Tensor
-from torch.nn import Module, MSELoss, CrossEntropyLoss, Linear, ModuleList
+from torch.nn import Module, Linear, ModuleList
 import torch.nn.functional as F
-from torch.optim import adam, sgd
 from core import core
 from torch.utils.tensorboard import SummaryWriter
 import time
@@ -35,9 +34,7 @@ class Mlp(Module):
         self.layers_nbr = layers_nbr
         self.hidden_layers = ModuleList()
         for n in range(layers_nbr - 1):
-            print(layers_in_out[n])
             self.hidden_layers.append(Linear(layers_in_out[n][0], layers_in_out[n][1]))
-        print(layers_in_out[layers_nbr - 1])
         self.output = Linear(
             layers_in_out[layers_nbr - 1][0], layers_in_out[layers_nbr - 1][1]
         )
@@ -160,7 +157,7 @@ def objective(trial: Trial) -> float:
 
 if __name__ == "__main__":
     study = optuna.create_study(direction="maximize")
-    study.optimize(objective, n_trials=1000)
+    study.optimize(objective, n_trials=1000, timeout=10800)
 
     pruned_trials = study.get_trials(deepcopy=False, states=[TrialState.PRUNED])
     complete_trials = study.get_trials(deepcopy=False, states=[TrialState.COMPLETE])
