@@ -89,7 +89,7 @@ def objective(trial: Trial) -> float:
     global test_dataset_g
     test_dataset_g = test_dataset
     batch_size = trial.suggest_int("batch", 3, 100)
-    loss_func = torch.nn.MSELoss()  # torch.nn.CrossEntropyLoss() TODO ça marche pas !
+    loss_func = torch.nn.MSELoss()
     # Training of the model.
     start_time = time.time()
     model_trained, nb_epoch, local_loss_mean, accuracy = core.training_early_stopping(
