@@ -19,7 +19,9 @@ The project includes implementations of the following architectures:
 To run this project, you need Python and the following libraries:
 - [PyTorch](https://pytorch.org/get-started/locally/)
 - Tensorboard
+- Optuna
+- ...
 Install dependencies with:
 ```bash
-  pip install tensorboard
+  pip install -r requirement.txt
 ```
