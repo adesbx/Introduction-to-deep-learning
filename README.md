@@ -25,3 +25,15 @@ Install dependencies with:
 ```bash
   pip install -r requirement.txt
 ```
+
+## TensorBoard Logs
+
+The project includes several `runs/` directories that store log data for **TensorBoard**. These logs track model metrics, such as training loss and accuracy, across different training sessions, allowing for a visual analysis of model performance over time.
+
+### Viewing Logs with TensorBoard
+
+To visualize the logs, use TensorBoard. Run the following command, specifying the path to the `runs/` directory:
+
+```bash
+tensorboard --logdir=runs/example_run
+```
